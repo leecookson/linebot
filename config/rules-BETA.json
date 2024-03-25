@@ -1,0 +1,484 @@
+[
+  {
+    "name": "Troop Matchup",
+    "rules": {
+      "OR": [
+        { "exactMatch": "attack chart" },
+        { "exactMatch": "attack order" },
+        { "exactMatch": "troop order" },
+        { "exactMatch": "troop matchups" },
+        { "exactMatch": "troop matchup" }
+      ]
+    },
+    "response": [{
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/ATTACK-ORDERFull.jpg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/ATTACK-ORDERPreview.jpg"
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "T1 troop names",
+    "keywords": [
+      "t1", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Militia,\nr-Archer,\nm-Mounted Elf;\n\nDwarf: f-Militia,\nr-Axe Thrower,\nm-Mounted Dwarf"
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "T2 troop names",
+    "keywords": [
+      "t2", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Warrior,\nr-Scorpion,\nm-Hunters;\n\nDwarf: f-Warrior,\nr-Siege Crossbow,\nm-Boar Rider"
+      }
+    ]
+  },
+  {
+    "name": "T3 troop names",
+    "keywords": [
+      "t3", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Rams,\nr-Ents,\nm-Galadhrim;\n\nDwarf: f-Rams,\nr-Catapults,\nm-Heavy Boar Riders"
+      }
+    ]
+  },
+  {
+    "name": "T4 troop names",
+    "keywords": [
+      "t4", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Mithlond Guard,\nr-Great Eagle,\nm-Galadhrim Lancer;\n\nDwarf: f-Phalanx,\nr-Catapult Wagon,\nm-Boar Archer"
+      }
+    ]
+  },
+  {
+    "name": "T5 troop names",
+    "keywords": [
+      "t5", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Ranger,\nr-Galadhrim Archer,\nm-Rider of Rivendel;\n\nDwarf: f-Grim Hammer,\nr-Crossbow Warrior ,\nm-Roder of Erebor"
+      }
+    ]
+  },  {
+    "name": "Wall troops",
+    "rules": {
+      "OR": [
+        { "keywords": ["wall", "troop"] },
+        { "keywords": ["wall", "unit"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "T1:Elf&Dwarf:\nT1- f-Caltrops\nr-Traps,\nm-Defense Crossbows"
+      },
+      {
+        "type": "text",
+        "text": "T2:Elf:\nT1- f-Thorn Hedges\nr-Rock Droppers,\nm-Def. Trebuchet\n\nDwarf: f-Dragon's Teeth,\nr-Rock Droppers ,\nm-Def. Trebuchet"
+      },
+      {
+        "type": "text",
+        "text": "T3:Elf:\nT1- f-Tanglevines\nr-Fire Droppers,\nm-Mist Globes\n\nDwarf: f-Chain Webs,\nr-Boiling Lead ,\nm-Fire Droppers"
+      }
+    ]
+  },
+  {
+    "name": "Heroes Table of Contents",
+    "exactMatch": "heroes",
+    "response": [
+      {
+        "type": "text",
+        "text": "Type 'heroes c1', 'heroes c2', etc. to see the corresponding heroes."
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "Heroes City 1",
+    "exactMatch": "heroes c1",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Gandalf\n2 Bilbo\n3 Radagast\n4 Saruman\n5 Ceriand/Bofur\n6 Tararil/Gloin\n7 Lindir/Fili\n8 Dwalin/Tinol\n9 Balin/Amara\n10 Bifur/Legolas"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 2",
+    "exactMatch": "heroes c2",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Hilad/Dori\n2 Vastriel/Kili\n3 Elrond/Nori\n4 Brinduil/Oin\n5 Fádia/Thorin\n6 Findor/Bombur\n7 Cirthil/Toran\n8 Cithiel/Brind\n9 Daladriel/Ori\n10 Legor/Ralin"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 3",
+    "exactMatch": "heroes c3",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Isór/Bolir\n2 Nanduil/Demli\n3 Fáldur/Legil\n4 Delidia/Helir\n5 Tárith/Maldu\n6 Miowan/Nifur\n7 Fioldor/Nifur\n8 Glaraldor/Thrad\n9 Sinithiel/Tralin\n10 Duluin/Corfil"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 4",
+    "exactMatch": "heroes c4",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Aelki/Thrir\n2 Nárwen/Freron\n3 Tahlali/Garhnall\n4 Raiwen/Ovrok\n5 Vargar/Forin\n6 Hára/Torgrin\n7 Fidhien/Ulvak\n8 Simhar/Telhar\n9 Aerlondiel/Tordok\n10 Deldhinor/Dunamir\n extra: Beorn and Tauriel"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 5",
+    "exactMatch": "heroes c5",
+    "response": [
+      {
+        "type": "text",
+        "text": "extra: Bard\nGuthwald\nOrdhelm\nAldostan\nHesthryth\nTilswyn\nTriswig\nEvaren\nEalwen\nBranheric\nBronsgar"
+      }
+    ]
+  },
+  {
+    "disabled": true,
+    "name": "Temp Gear List",
+    "rules": {
+      "OR": [
+        { "keywords": ["temp", "gear"] },
+        { "keywords": ["temporary", "gear"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "-Foe Attack:\nWeapon: Corrupted Darkness\nCloak: Anguish\nAmulet: Ruin\nShield: Dragonheart\nRing: Discord\n\nLife:\nWeapon: Empyrean\nCloak: Tranquility\nAmulet: Creation\nShield: Lionheart\nRing: Unity"
+      }
+    ]
+  },
+  {
+    "name": "Item Paths",
+    "rules": {
+      "OR": [
+        { "exactMatch": "itemsX" }
+      ]
+    },
+    "response": [
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/ItemPathsFull.jpeg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/ItemPathsThumb.jpeg"
+      }
+    ]
+  },
+  {
+    "name": "Troop Might",
+    "rules": {
+      "OR": [
+        { "exactMatch": "troop might" }
+      ]
+    },
+    "response": [
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/TroopMightFull.jpg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/TroopMightPreview.jpg"
+      }
+    ]
+  },
+  {
+    "name": "map coords",
+    "rules": {
+      "OR": [
+        { "exactMatch": "map coords" }
+      ]
+    },
+    "response": [
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/map-coordsFull.jpg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/map-coordsPreview.jpg"
+      }
+    ]
+  },
+  {
+    "name": "map regions",
+    "rules": {
+      "OR": [
+        { "exactMatch": "map regions" }
+      ]
+    },
+    "response": [
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/map-regionsFull.jpg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/map-regionsPreview.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Dynamic Rules",
+    "rules": {
+      "OR": [
+        { "exactMatch": "help" },
+        { "exactMatch": "welcome" },
+        { "exactMatch": "rules" },
+        { "exactMatch": "season" },
+        { "exactMatch": "prizes" }
+      ]
+    },
+    "response": [{
+      "type": "function",
+      "function": "DYNAMIC"
+    }]
+  },
+  {
+    "name": "About Hobbot",
+    "exactMatch": "copyright",
+    "response": [{
+      "type": "text",
+      "text": "Hobbit Helper (Hobbot) is an @Line channel with an extremely intelligent personal assistant integrated.  No warranty, expressed or implied, is given. (C) 2941, Third Age."
+    },{
+      "type": "text",
+      "text": "Hobbot loves you."
+    }]
+  },
+  {
+    "name": "Sticker Warning",
+    "exactMatch": "sticker_warning",
+    "response": [{
+      "type": "text",
+      "text": "Please refrain from using stickers in this chat."
+    }],
+    "roomsOnly": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "Follow Welcome",
+    "exactMatch": "follow",
+    "response": [{
+      "type": "text",
+      "text": "Thanks for following BETA.  Type \"help\" to learn how to use BETA."
+    }]
+  },
+  {
+    "name": "Join Thanks",
+    "exactMatch": "join",
+    "response": [{
+      "type": "text",
+      "text": "Thanks for inviting BETA to this group chat.  Type \"help\" to learn how to use BETA"
+    }]
+  },
+  {
+    "name": "Hush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "hush" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "HUSH"
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "Unhush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "unhush" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "UNHUSH"
+      }
+    ]
+  },
+  {
+    "name": "Eliza On",
+    "rules": {
+      "OR": [
+        { "exactMatch": "gandalf" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ELIZAON"
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "Alert Status",
+    "rules": {
+      "OR": [
+        { "exactMatch": "alerts" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ALERTS"
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "Alerts On",
+    "rules": {
+      "OR": [
+        { "exactMatch": "alerts on" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ALERTSON"
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "Alerts Off",
+    "rules": {
+      "OR": [
+        { "exactMatch": "alerts off" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ALERTSOFF"
+      }
+    ],
+    "roomsNever": ["C45748f4343bb338de1644609f7b12d20"]
+  },
+  {
+    "name": "Info Status",
+    "rules": {
+      "OR": [
+        { "exactMatch": "info" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "INFO"
+      }
+    ]
+  },
+  {
+    "name": "Info On",
+    "rules": {
+      "OR": [
+        { "exactMatch": "info on" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "INFOON"
+      }
+    ]
+  },
+  {
+    "name": "Info Off",
+    "rules": {
+      "OR": [
+        { "exactMatch": "info off" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "INFOOFF"
+      }
+    ]
+  },
+  {
+    "name": "Hobbit Time",
+    "rules": {
+      "OR": [
+        { "exactMatch": "gametime" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "GAMETIME"
+      }
+    ]
+  },
+  {
+    "name": "Giphy",
+    "rules": {
+      "OR": [
+        { "exactMatch": "giphy" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "GIPHY"
+      }
+    ]
+  },
+  {
+    "name": "Customer Service List",
+    "rules": {
+      "OR": [
+        { "exactMatch": "zendesk" },
+        { "exactMatch": "cs" },
+        { "exactMatch": "customer service" },
+        { "exactMatch": "customer support" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Gaea Customer Support Site: https://gaea.zendesk.com/hc/en-us/requests/new"
+      }
+    ]
+  },
+  {
+    "name": "Easter Egg",
+    "rules": {
+      "OR": [
+        { "exactMatch": "backdoor" },
+        { "exactMatch": "back door" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Pedo Mellon a Minno."
+      }
+    ]
+  }
+]

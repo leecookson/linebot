@@ -1,0 +1,149 @@
+<html>
+  <head>
+    <title>HobbitHelper Admin</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin= "anonymous">
+    <link href="//s.hobbitmaster.us/g.css" rel="stylesheet">
+    <style>
+      .template {display: none;}
+      .hidden {display: none;}
+      .table-bordered td, .table-bordered th {
+        padding: 5px;
+      }
+      .item-id {min-width: 50px;}
+      .item-name {min-width: 100px;}
+      .item-content {min-width: 200px;}
+      .item-content textarea {width: 25em; height: 12em;}
+      textarea {border: 2px solid #ddd;}
+      textarea.modified {
+        border: 2px solid #d33;
+      }
+      textarea.saved {
+        border: 2px solid #3d3;
+      }
+      button {margin: 4px 2px;}
+    </style>
+
+    <script src="https://code.jquery.com/jquery-2.2.2.js" integrity="sha256-4/zUCqiq0kqxhZIyp4G0Gk+AOtCJsY1TA00k5ClsZYE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js" integrity="sha256-XDU6Po3hKjdQXJHRrKrWlIF/E6y6BBgV5eiqZSYePpo=" crossorigin="anonymous"></script>
+
+    <script>
+      function loadItems(cb) {
+        cb = cb || function (){};
+        var rules = jQuery.ajax({
+          method: 'GET',
+          url: '/api/rules',
+          dataType: 'json'
+        });
+        rules.done(function (result) {
+          var container = $('#data-container');
+          generateItems(container, result);
+          cb();
+        });
+        rules.fail(function (error) {
+          $('#data-container').text("ERROR", JSON.stringify(error));
+          cb();
+        });
+      }
+
+      function saveItem(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/rules/' + item.id,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          $('content-' + item.id).addClass('saved');
+          $('content-' + item.id).removeClass('modified');
+          console.log('saved', result);
+          cb();
+        });
+        save.fail(function (error) {
+          console.error('error saving', error);
+          cb();
+        });
+      }
+
+      function generateItems(target, items) {
+        target.empty();
+        var t = templateFromCdata($('#item-template')[0]);
+        target.append(Mustache.render(t, {items: items}));
+      }
+      function templateFromCdata(el) {
+        var cdataRegex = /^<!\[CDATA\[((.|\r?\n)*)\]\]>$/;
+        var t = el.innerHTML.trim();
+        var m = cdataRegex.exec(t);
+        return m ? m[1] : t;
+      }
+      function updateContent(id) {
+        var nameField = $('#name-' + id)[0];
+        var contentField = $('#content-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          content: contentField.value
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers(item.id);
+          });
+        });
+      }
+      function addUpdateHandlers(savedItem) {
+        $('.update-content').click(function (ev) {
+          updateContent($(this).data('id'));
+        });
+        $('.content').keyup(function (ev) {
+          $(this).addClass('modified');
+          $(this).removeClass('saved');
+        }).focus(function (ev) {
+          $(this).removeClass('saved');
+        });
+        if (savedItem) {
+          $('#content-' + savedItem).addClass('saved');
+        }
+      }
+      loadItems(function () {
+        addUpdateHandlers();
+      });
+    </script>
+  </head>
+  <body>
+    <section class="menu-wrapper">
+      <header class="menu">
+        <nav style="height: 30px;">
+          <ul class="nav nav-pills">
+          </ul>
+        </nav>
+        <h3>HobbitHelper Admin</h3>
+      </header>
+    </section>
+    <div class="container-fluid">
+      <section>
+        <ul class="nav nav-pills">
+        </ul>
+        <div id="data-container">
+        </div>
+      </section>
+    </div>
+    <script type="text/template" id="item-template">
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Name</th><th>Content</th></tr>
+          </thead>
+          {{#items}}
+          <tr>
+            <td class="item-id hidden" id="id-{{id}}">{{id}}</td>
+            <td class="item-name"><input type="text" id="name-{{id}}" value="{{name}}" disabled/><br/>
+              <button class="update-content btn btn-default" data-id="{{id}}" id="update-{{id}}" type="submit">Update</button>
+            </td>
+            <td class="item-content"><textarea class="content" id="content-{{id}}">{{content}}</textarea>
+          </tr>
+          {{/items}}
+        </table>
+    </script>
+  </body>
+</html>

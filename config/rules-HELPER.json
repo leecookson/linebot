@@ -1,0 +1,260 @@
+[
+  {
+    "name": "Schedule",
+    "rules": {
+      "OR": [
+        { "exactMatch": "schedule" }
+      ]
+    },
+    "response": [{
+        "type": "function",
+        "function": "DYNAMIC"
+      }
+    ]
+  },
+  {
+    "name": "Item Paths",
+    "rules": {
+      "OR": [
+        { "exactMatch": "items" }
+      ]
+    },
+    "response": [
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/ItemPathsFull.jpeg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/ItemPathsThumb.jpeg"
+      }
+    ]
+  },
+  {
+    "name": "About Messy",
+    "exactMatch": "copyright",
+    "response": [{
+      "type": "text",
+      "text": "EvD Messenger (Messy) is an @Line channel with an extremely intelligent personal assistant integrated.  No warranty, expressed or implied, is given. (C) 2941, Third Age."
+    },{
+      "type": "text",
+      "text": "Messy loves you."
+    }]
+  },
+  {
+    "name": "Sticker Warning",
+    "disabled": true,
+    "exactMatch": "sticker_warning",
+    "response": [{
+      "type": "text",
+      "text": "Please refrain from using stickers in this chat."
+    }]
+  },
+  {
+    "name": "Follow Welcome",
+    "exactMatch": "follow",
+    "response": [{
+      "type": "text",
+      "text": "Thanks for following EvD Messenger.  Type \"help\" to learn how to use the Messenger."
+    },
+    {
+      "type": "text",
+      "text": "If you would like to join the EvD Fellowship/Gaea group, please add ID: (evdgroupadmin) as a friend?"
+    }]
+  },
+  {
+    "name": "Join Thanks",
+    "exactMatch": "join",
+    "response": [{
+      "type": "text",
+      "text": "Thanks for inviting EvD Messenger to this group chat.  Type \"help\" to learn how to use the Messenger"
+    }]
+  },
+  {
+    "name": "Hush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "hush" }
+      ]
+    },
+    "roomsOnly": [],
+    "roomsNever": [
+      "C985bcb6aad0b9ff5224f4f0e93995124"
+    ],
+    "response": [
+      {
+        "type": "function",
+        "function": "HUSH"
+      }
+    ]
+  },
+  {
+    "name": "Unhush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "unhush" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "UNHUSH"
+      }
+    ]
+  },
+  {
+    "name": "Eliza On",
+    "rules": {
+      "OR": [
+        { "exactMatch": "turfan" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ELIZAON"
+      }
+    ]
+  },
+  {
+    "name": "Alert Status",
+    "rules": {
+      "OR": [
+        { "exactMatch": "alerts" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ALERTS"
+      }
+    ]
+  },
+  {
+    "name": "Alerts On",
+    "rules": {
+      "OR": [
+        { "exactMatch": "alerts on" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ALERTSON"
+      }
+    ]
+  },
+  {
+    "name": "Alerts Off",
+    "rules": {
+      "OR": [
+        { "exactMatch": "alerts off" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "ALERTSOFF"
+      }
+    ]
+  },
+  {
+    "name": "EvD Time",
+    "rules": {
+      "OR": [
+        { "exactMatch": "gametime" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "GAMETIME"
+      }
+    ]
+  },
+  {
+    "name": "sentiment",
+    "rules": {
+      "OR": [
+        { "exactMatch": "sentiment" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "SENTIMENT"
+      }
+    ]
+  },
+  {
+    "name": "history",
+    "rules": {
+      "OR": [
+        { "exactMatch": "history!" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "HISTORY"
+      }
+    ]
+  },
+  {
+    "name": "Customer Service List",
+    "rules": {
+      "OR": [
+        { "exactMatch": "zendesk" },
+        { "exactMatch": "cs" },
+        { "exactMatch": "customer service" },
+        { "exactMatch": "customer support" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Gaea Customer Support Site: https://gaea.zendesk.com/hc/en-us/requests/new"
+      }
+    ]
+  },
+  {
+    "name": "Easter Egg",
+    "rules": {
+      "OR": [
+        { "exactMatch": "backdoor" },
+        { "exactMatch": "back door" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Pedo Mellon a Minno."
+      }
+    ]
+  },
+  {
+    "name": "Lorj Easter Egg",
+    "rules": {
+      "OR": [
+        { "exactMatch": "lorj" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Lorj is Awesome!"
+      }
+    ]
+  },
+  {
+    "name": "Burr Easter Egg",
+    "rules": {
+      "OR": [
+        { "exactMatch": "burr" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Burr is Awesome!"
+      }
+    ]
+  }
+]

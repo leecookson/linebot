@@ -1,0 +1,288 @@
+<html>
+  <head>
+    <title>HobbitHelper Admin</title>
+
+    <link rel="icon" href="//s.hobbitmaster.us/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin= "anonymous">
+    <link href="//s.hobbitmaster.us/g.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=.6">
+
+    <style>
+      body {
+      }
+      .template {display: none;}
+      .hidden {display: none;}
+      table.table-bordered {
+        width: 98%;
+      }
+      .table-bordered td, .table-bordered th {
+        padding: 5px;
+      }
+      tr {
+        border: 2px solid #393;
+      }
+      .item-id {min-width: 50px;}
+      .item-name {min-width: 100px; width: 130px;}
+      .item-response {min-width: 180px;}
+      .item-response textarea {width: 100%; height: 12em;}
+      textarea {border: 2px solid #ddd;}
+      textarea.modified {
+        border: 2px solid #d33;
+      }
+      textarea.saved {
+        border: 2px solid #3d3;
+      }
+      button {margin: 4px 2px;}
+    </style>
+
+    <script src="https://code.jquery.com/jquery-2.2.2.js" integrity="sha256-4/zUCqiq0kqxhZIyp4G0Gk+AOtCJsY1TA00k5ClsZYE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js" integrity="sha256-XDU6Po3hKjdQXJHRrKrWlIF/E6y6BBgV5eiqZSYePpo=" crossorigin="anonymous"></script>
+
+    <script>
+      var botName = 'GERMAN';
+      var maxResponseID = 0;
+      var dataSet = [];
+      function loadItems(cb) {
+        cb = cb || function (){};
+        var responses = jQuery.ajax({
+          method: 'GET',
+          url: '/api/response/' + botName,
+          dataType: 'json'
+        });
+        responses.done(function (result) {
+          dataSet = result;
+          var container = $('#data-container');
+          generateItems(container, result);
+          cb();
+        });
+        responses.fail(function (error) {
+          $('#data-container').text("ERROR", JSON.stringify(error));
+          cb();
+        });
+      }
+
+      function saveItem(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/response/' + botName + '/' + item.id,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          $('response-' + item.id).addClass('saved');
+          $('response-' + item.id).removeClass('modified');
+          console.log('saved', result);
+          cb();
+        });
+        save.fail(function (error) {
+          console.error('error saving', error);
+          cb();
+        });
+      }
+
+      function deleteItem(id, cb) {
+        cb = cb || function (){};
+        var del = jQuery.ajax({
+          method: 'DELETE',
+          url: '/api/response/' + botName + '/' + id
+        });
+        del.done(function (result) {
+          console.log('deleted', result);
+          cb();
+        });
+        del.fail(function (error) {
+          console.error('error deleting', error);
+          cb();
+        });
+      }
+
+      function addItem(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/response/' + botName + '/' + item.id,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          console.log('added', result);
+          cb(null, result);
+        });
+        save.fail(function (error) {
+          console.error('error adding', error);
+          cb(error);
+        });
+      }
+
+      function addResponse(cb) {
+        addItem({id: maxResponseID + 1, name: 'ANewResponse', response:[{type:'text',text:'new text'}]}, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function deleteResponse(id, cb) {
+        deleteItem(id, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function addMessageToResponse(id, cb) {
+        var response = [];
+        $('#response-' + id + ' .message').each(function (index) {
+          response.push({type:'text', text:this.value});
+        });
+        response.push({'type':'text','text':'New Text'});
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function generateItems(target, items) {
+        items.forEach(function (item, index) {
+          item.index = index;
+          if (item.id > maxResponseID) {
+            maxResponseID = parseInt(item.id, 10);
+          }
+          item.response.forEach(function (m, index) {
+            m.index = index;
+          });
+        });
+        target.empty();
+        var t = templateFromCdata($('#item-template')[0]);
+        target.append(Mustache.render(t, {items: items}));
+      }
+      function templateFromCdata(el) {
+        var cdataRegex = /^<!\[CDATA\[((.|\r?\n)*)\]\]>$/;
+        var t = el.innerHTML.trim();
+        var m = cdataRegex.exec(t);
+        return m ? m[1] : t;
+      }
+
+      function updateResponse(id) {
+        var response = [];
+        $('#response-' + id + ' .message').each(function (index) {
+          response.push({type:'text', text:this.value});
+        });
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers(item.id);
+          });
+        });
+      }
+      function deleteMessage(id, messageIndex) {
+        var response = [];
+        $('#response-' + id + ' .message').each(function (index) {
+          if (index === messageIndex) return;
+          response.push({type:'text', text:this.value});
+        });
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers(item.id);
+          });
+        });
+      }
+      function addUpdateHandlers(savedItem) {
+        $('#add-response').click(function (ev) {
+          addResponse();
+        });
+        $('.add-message').click(function (ev) {
+          addMessageToResponse($(this).data('id'));
+        });
+        $('.delete-response').click(function (ev) {
+          deleteResponse($(this).data('id'));
+        });
+        $('.delete-message').click(function (ev) {
+          deleteMessage($(this).data('id'), $(this).data('message-index'));
+        });
+        $('.update-response').click(function (ev) {
+          updateResponse($(this).data('id'));
+        });
+        $('.response').keyup(function (ev) {
+          $(this).addClass('modified');
+          $(this).removeClass('saved');
+        }).focus(function (ev) {
+          $(this).removeClass('saved');
+        });
+        if (savedItem) {
+          $('#response-' + savedItem).addClass('saved');
+        }
+      }
+
+      // Page INIT
+      loadItems(function () {
+        addUpdateHandlers();
+      });
+    </script>
+  </head>
+  <body>
+    <section class="menu-wrapper">
+      <header class="menu">
+        <nav style="height: 30px;">
+          <ul class="nav nav-pills">
+          </ul>
+        </nav>
+        <h3>HobbitHelper Admin (DE)</h3>
+      </header>
+    </section>
+    <div class="container-fluid">
+      <section>
+        <ul class="nav nav-pills">
+        </ul>
+        <div id="data-container">
+        </div>
+      </section>
+    </div>
+    <script type="text/template" id="item-template">
+      <button class="add-response btn btn-primary" id="add-response"><span class="glyphicon glyphicon-plus"></span> Add Response</button>
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Name</th><th>Messages</th></tr>
+          </thead>
+          {{#items}}
+          <tr>
+            <td class="item-id hidden" id="id-{{id}}">{{id}}</td>
+            <td class="item-name">
+              <input type="text" id="name-{{id}}" value="{{name}}"/><br/>
+              <button class="update-response btn btn-sm btn-success" data-id="{{id}}" id="update-{{id}}" type="submit">&nbsp;&nbsp;Update&nbsp;&nbsp;</button>
+              <button class="add-message btn btn-sm btn-primary" data-id="{{id}}" id="add-message-{{id}}" type="submit">Add Message</button><br/>
+              <button class="delete-response btn btn-sm btn-danger" data-id="{{id}}" id="delete-response-{{id}}" type="submit">Delete Response</button><br/>
+            </td>
+            <td class="item-response" id="response-{{id}}">
+              {{#response}}
+                <textarea class="message" id="message-{{id}}-{{index}}" data-response-id="{{id}}" data-message-index="{{index}}">{{text}}</textarea><br/>
+                <button class="delete-message btn btn-danger btn-xs" data-id="{{id}}" data-message-index="{{index}}" id="delete-message-{{id}}" type="submit">Delete Message</button><br/><br/>
+              {{/response}}
+            </td>
+          </tr>
+          {{/items}}
+        </table>
+    </script>
+  </body>
+</html>

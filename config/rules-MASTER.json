@@ -1,0 +1,460 @@
+[
+  {
+    "name": "CHS Calculator",
+    "disabled": true,
+    "rules": {
+      "OR": [
+        {"exactMatch": "calc"},
+        {"keywords": ["have", "calc"]},
+        {"keywords": ["calc", "login"]},
+        {"keywords": ["chs", "login"]},
+        {"keywords": ["chs", "calc"]}
+      ]
+    },
+    "response": [
+      {
+        "expires": "2017-01-24T23:59",
+        "type": "text",
+        "text": "URL: http://kom-chs.mhweb.in/\nEmail: chrishallam75@aol.com\nPassword: fkp0nm\nExpires: January 24,2017"
+      },
+      {
+        "expires": "2017-01-18T23:59Z",
+        "type": "text",
+        "text": "Alternate: t.r.heummer@gmail.com\nPassword: nh6mft\nExpires: January 18,2017"
+      }
+    ]
+  },
+  {
+    "name": "Sticker Warning",
+    "disabled": true,
+    "exactMatch": "sticker_warning",
+    "response": [
+      {
+        "type": "text",
+        "text": "Please refrain from using stickers in this chat."
+      }
+    ]
+  },
+  {
+    "name": "Hush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "hush" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "HUSH"
+      }
+    ]
+  },
+  {
+    "name": "Unhush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "unhush" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "UNHUSH"
+      }
+    ]
+  },
+  {
+    "name": "Hobbit Time",
+    "rules": {
+      "OR": [
+        { "exactMatch": "gametime" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "GAMETIME"
+      }
+    ]
+  },
+  {
+    "disabled": true,
+    "name": "ECHS Outpost Ranking",
+    "rules": {
+      "OR": [
+        { "keywords": ["elite", "chs"] },
+        { "exactMatch": "echs" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Highest Score Outposts:\nCHP:\n2.4  3.5  1.3\n4.5  1.2  2.1\n2.2  1.1  2.3\n3.1\nNecro:\n4.3  5.3  5.1\n4.5  5.5  4.4\n5.2  4.2  5.4\n4.1\nBosses will take more than one hit to max, so play smart."
+      }
+    ]
+  },
+  {
+    "name": "Help ToC",
+    "exactMatch": "help",
+    "response": [
+      {
+        "type": "text",
+        "text": "Enter questions about KoM topics like troops types, seasons, heroes, etc.\nExamples:\nT4 troops\nseason schedule"
+      }
+    ]
+  },
+  {
+    "name": "Disabled Rule",
+    "exactMatch": "hm disabled",
+    "disabled": true,
+    "response": [
+      {
+        "type": "function",
+        "function": "DISABLED_RULE"
+      }
+    ]
+  },
+  {
+    "name": "Lonely Mountain Season Sechedule",
+    "expires": "2017-04-08",
+    "rules": {
+      "OR": [
+        { "exactMatch": "schedule" },
+        { "exactMatch": "lonely" },
+        { "keywords": ["lonely", "schedule"] },
+        { "keywords": ["season", "schedule"] },
+        { "keywords": ["tournament", "schedule"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Lonely Mountain Schedule:\nhttps://docs.google.com/spreadsheets/d/1J1RXP3ZTW_MaWtQkNSyF30qfe-_ePJPEW_A57R3Eomo/edit#gid=0"
+      },
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/LonelyScheduleFull.jpg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/LonelySchedulePreview.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Item Paths",
+    "rules": {
+      "OR": [
+        { "exactMatch": "items" }
+      ]
+    },
+    "response": [
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/ItemPathsFull.jpeg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/ItemPathsThumb.jpeg"
+      }
+    ]
+  },
+  {
+    "name": "Lonely Mountain Season announcement",
+    "rules": {
+      "OR": [
+        { "exactMatch": "season" },
+        { "exactMatch": "announcement" },
+        { "keywords": ["lonely", "season"] },
+        { "keywords": ["announcement", "tournament"] },
+        { "keywords": ["lonely", "tournament"] },
+        { "keywords": ["lonely", "announcement"] },
+        { "keywords": ["season", "announcement"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Lonely Mountain Season Announcement:\nhttp://community.gaeamobile.com/showthread.php?662350-Lonely-Mountain-Tournament-Season-has-been-declared!"
+      }
+    ]
+  },
+  {
+    "name": "Winter Wonderbag Combined Trade",
+    "disabled": true,
+    "rules": {
+      "OR": [
+        { "keywords": ["wonderbag", "trade"] },
+        { "keywords": ["bag", "trade"] },
+        { "keywords": ["full", "trade"] },
+        { "keywords": ["full", "item"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Wonderbag trades unknown-have been requested by FS"
+      }
+    ]
+  },
+  {
+    "name": "Facebook Event Payout",
+    "disabled": true,
+    "rules": {
+      "OR": [
+        { "keywords": ["facebook", "event"] },
+        { "keywords": ["facebook", "carnival"] },
+        { "keywords": ["winter", "carnival"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Regarding the recent Facebook fan page event, Dev found some error in there previous payout, resulting in only some participants receiving the reward.\n\nDev are looking into the issue as we speak and will need some time to recitify it."
+      }
+    ]
+  },
+  {
+    "name": "hero skill broken",
+    "keywords": [
+      "hero", "skill", "level"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "If you cant train above level 5, you probably have to clear cache or re-install the app"
+      }
+    ]
+  },
+  {
+    "name": "T1 troop names",
+    "keywords": [
+      "t1", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Militia,\nr-Archer,\nm-Mounted Elf;\n\nDwarf: f-Militia,\nr-Axe Thrower,\nm-Mounted Dwarf"
+      }
+    ]
+  },
+  {
+    "name": "T2 troop names",
+    "keywords": [
+      "t2", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Warrior,\nr-Scorpion,\nm-Hunters;\n\nDwarf: f-Warrior,\nr-Siege Crossbow,\nm-Boar Rider"
+      }
+    ]
+  },
+  {
+    "name": "T3 troop names",
+    "keywords": [
+      "t3", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Rams,\nr-Ents,\nm-Galadhrim;\n\nDwarf: f-Rams,\nr-Catapults,\nm-Heavy Boar Riders"
+      }
+    ]
+  },
+  {
+    "name": "T4 troop names",
+    "keywords": [
+      "t4", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Mithlond Guard,\nr-Great Eagle,\nm-Galadhrim Lancer;\n\nDwarf: f-Phalanx,\nr-Catapult Wagon,\nm-Boar Archer"
+      }
+    ]
+  },
+  {
+    "name": "T5 troop names",
+    "keywords": [
+      "t5", "troop", "names"
+    ],
+    "response": [
+      {
+        "type": "text",
+        "text": "Elf: f-Ranger,\nr-Galadhrim Archer,\nm-Rider of Rivendel;\n\nDwarf: f-Grim Hammer,\nr-Crossbow Warrior ,\nm-Roder of Erebor"
+      }
+    ]
+  },
+  {
+    "name": "Wall troops",
+    "rules": {
+      "OR": [
+        { "keywords": ["wall", "troop"] },
+        { "keywords": ["wall", "unit"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "T1:Elf&Dwarf:\nT1- f-Caltrops\nr-Traps,\nm-Defense Crossbows"
+      },
+      {
+        "type": "text",
+        "text": "T2:Elf:\nT1- f-Thorn Hedges\nr-Rock Droppers,\nm-Def. Trebuchet\n\nDwarf: f-Dragon's Teeth,\nr-Rock Droppers ,\nm-Def. Trebuchet"
+      },
+      {
+        "type": "text",
+        "text": "T3:Elf:\nT1- f-Tanglevines\nr-Fire Droppers,\nm-Mist Globes\n\nDwarf: f-Chain Webs,\nr-Boiling Lead ,\nm-Fire Droppers"
+      }
+    ]
+  },
+  {
+    "name": "Heroes Table of Contents",
+    "exactMatch": "heroes",
+    "response": [
+      {
+        "type": "text",
+        "text": "Type 'heroes c1', 'heroes c2', etc. to see the corresponding heroes."
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 1",
+    "exactMatch": "heroes c1",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Gandalf\n2 Bilbo\n3 Radagast\n4 Saruman\n5 Ceriand/Bofur\n6 Tararil/Gloin\n7 Lindir/Fili\n8 Dwalin/Tinol\n9 Balin/Amara\n10 Bifur/Legolas"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 2",
+    "exactMatch": "heroes c2",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Hilad/Dori\n2 Vastriel/Kili\n3 Elrond/Nori\n4 Brinduil/Oin\n5 Fádia/Thorin\n6 Findor/Bombur\n7 Cirthil/Toran\n8 Cithiel/Brind\n9 Daladriel/Ori\n10 Legor/Ralin"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 3",
+    "exactMatch": "heroes c3",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Isór/Bolir\n2 Nanduil/Demli\n3 Fáldur/Legil\n4 Delidia/Helir\n5 Tárith/Maldu\n6 Miowan/Nifur\n7 Fioldor/Nifur\n8 Glaraldor/Thrad\n9 Sinithiel/Tralin\n10 Duluin/Corfil"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 4",
+    "exactMatch": "heroes c4",
+    "response": [
+      {
+        "type": "text",
+        "text": "1 Aelki/Thrir\n2 Nárwen/Freron\n3 Tahlali/Garhnall\n4 Raiwen/Ovrok\n5 Vargar/Forin\n6 Hára/Torgrin\n7 Fidhien/Ulvak\n8 Simhar/Telhar\n9 Aerlondiel/Tordok\n10 Deldhinor/Dunamir\n extra: Beorn and Tauriel"
+      }
+    ]
+  },
+  {
+    "name": "Heroes City 5",
+    "exactMatch": "heroes c5",
+    "response": [
+      {
+        "type": "text",
+        "text": "extra: Bard\nGuthwald\nOrdhelm\nAldostan\nHesthryth\nTilswyn\nTriswig\nEvaren\nEalwen\nBranheric\nBronsgar"
+      }
+    ]
+  },
+  {
+    "name": "Temp Gear List",
+    "rules": {
+      "OR": [
+        { "keywords": ["temp", "gear"] },
+        { "keywords": ["temporary", "gear"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "-Foe Attack:\nWeapon: Corrupted Darkness\nCloak: Anguish\nAmulet: Ruin\nShield: Dragonheart\nRing: Discord\n\nLife:\nWeapon: Empyrean\nCloak: Tranquility\nAmulet: Creation\nShield: Lionheart\nRing: Unity"
+      }
+    ]
+  },
+  {
+    "name": "Gear Categories",
+    "rules": {
+      "OR": [
+        { "keywords": ["gear", "types"] },
+        { "keywords": ["gear", "strength"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Titan (Bard): defense, troops\nTactician (Legolas/Bifur): attack, tactical, troops!\nCampaigner (Galadriel/Ori): balanced\nAmara/Balin: balanced, tactical/\nTararil: attack\nLindir: Defense"
+      }
+    ]
+  },
+  {
+    "name": "Customer Service List",
+    "rules": {
+      "OR": [
+        { "keywords": ["customer", "service"] },
+        { "keywords": ["customer", "support"] },
+        { "exactMatch": "zendesk" },
+        { "keywords": ["cs", "contact"] }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Gaea Customer Support Site: https://gaea.zendesk.com/hc/en-us/requests/new"
+      }
+    ]
+  },
+  {
+    "disabled": true,
+    "name": "Chat rules",
+    "exactMatch": "chat rules",
+    "response": [
+      {
+        "type": "text",
+        "text": "Rules for Christian's XW KOM chat:\n\n If you have a problem or complaint, suggest a solution for it.\n\n Do not create a negative atmosphere. Take that to the forums or Rant Chat. \n\nNo memes or stickers (there are chats for those & they take up a lot of space)\n\nNo server politics\n\nNo trolling, attacking, or harassing other members in this chat. Take it to pm or GC. \n\n It's ok if you are angry, but avoid name calling, cursing and accusations. Treat other members with respect.\n\n Keep mostly to KOM topics, or info is lost in the chatter.\n\n Please let admins invite new members, or remove problem members. (The exception is that any member can remove someone who is trying to nuke the chat.)"
+      }
+    ]
+  },
+  {
+    "disabled": true,
+    "name": "Current admins",
+    "exactMatch": "admins",
+    "response": [
+      {
+        "type": "text",
+        "text": "Admins:\nMirkwoods\nVerya\nMelanem\nOneRingToRule\nPharmakon\n•ᴮᴱᴺ•\nWarriorMaiden"
+      }
+    ]
+  },
+  {
+    "name": "Fellowship members",
+    "exactMatch": "fellowship",
+    "response": [
+      {
+        "type": "text",
+        "text": "Fellowship:\nHonorAndGlory\nEvilHobitKiller\nStarrGazr\nEvenstar\nInvictus\nHellWolf\nMoshe\nSteve"
+      }
+    ]
+  },
+  {
+    "name": "Easter Egg",
+    "rules": {
+      "OR": [
+        { "exactMatch": "backdoor" },
+        { "exactMatch": "back door" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Pedo Mellon a Minno."
+      }
+    ]
+  }
+]

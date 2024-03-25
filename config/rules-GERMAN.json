@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Schedule",
+    "rules": {
+      "OR": [
+        { "exactMatch": "schedule" }
+      ]
+    },
+    "response": [{
+        "type": "function",
+        "function": "DYNAMIC"
+      },
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/LonelyScheduleFull.jpg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/LonelySchedulePreview.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Item Paths",
+    "rules": {
+      "OR": [
+        { "exactMatch": "items" }
+      ]
+    },
+    "response": [
+      {
+        "type": "image",
+        "originalContentUrl": "https://s.hobbitmaster.us/line/ItemPathsFull.jpeg",
+        "previewImageUrl": "https://s.hobbitmaster.us/line/ItemPathsThumb.jpeg"
+      }
+    ]
+  },
+  {
+    "name": "Dynamic Rules",
+    "rules": {
+      "OR": [
+        { "exactMatch": "help" },
+        { "exactMatch": "welcome" },
+        { "exactMatch": "rules" },
+        { "exactMatch": "season" },
+        { "exactMatch": "prizes" },
+        { "exactMatch": "questions" },
+        { "exactMatch": "announcements" },
+        { "exactMatch": "issues" },
+        { "exactMatch": "fellowship" },
+        { "exactMatch": "admins" },
+        { "exactMatch": "results" },
+        { "exactMatch": "demounts" },
+        { "exactMatch": "stats" }
+      ]
+    },
+    "response": [{
+      "type": "function",
+      "function": "DYNAMIC"
+    }]
+  },
+  {
+    "name": "Sticker Warning",
+    "disabled": true,
+    "exactMatch": "sticker_warning",
+    "response": [{
+      "type": "text",
+      "text": "Please refrain from using stickers in this chat."
+    }]
+  },
+  {
+    "name": "Hush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "hush" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "HUSH"
+      }
+    ]
+  },
+  {
+    "name": "Unhush",
+    "rules": {
+      "OR": [
+        { "exactMatch": "unhush" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "UNHUSH"
+      }
+    ]
+  },
+  {
+    "name": "Hobbit Time",
+    "rules": {
+      "OR": [
+        { "exactMatch": "gametime" }
+      ]
+    },
+    "response": [
+      {
+        "type": "function",
+        "function": "GAMETIME"
+      }
+    ]
+  },
+  {
+    "name": "Customer Service List",
+    "rules": {
+      "OR": [
+        { "exactMatch": "zendesk" },
+        { "exactMatch": "cs" },
+        { "exactMatch": "customer service" },
+        { "exactMatch": "customer support" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Gaea Customer Support Site: https://gaea.zendesk.com/hc/en-us/requests/new"
+      }
+    ]
+  },
+  {
+    "name": "Easter Egg",
+    "rules": {
+      "OR": [
+        { "exactMatch": "backdoor" },
+        { "exactMatch": "back door" }
+      ]
+    },
+    "response": [
+      {
+        "type": "text",
+        "text": "Pedo Mellon a Minno."
+      }
+    ]
+  }
+]

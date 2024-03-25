@@ -1,0 +1,500 @@
+<html>
+  <head>
+    <title>HobbitHelper Admin</title>
+
+    <link rel="icon" href="//s.hobbitmaster.us/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin= "anonymous">
+    <link href="//s.hobbitmaster.us/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+
+    <link href="//s.hobbitmaster.us/g.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=.6">
+
+    <style>
+      body {
+      }
+      .template {display: none;}
+      .hidden {display: none;}
+      .btn-transparent {
+        background: transparent;
+        color: #F2F2F2;
+        -webkit-transition: background .2s ease-in-out, border .2s ease-in-out;
+        -moz-transition: background .2s ease-in-out, border .2s ease-in-out;
+        -o-transition: background .2s ease-in-out, border .2s ease-in-out;
+        transition: background .2s ease-in-out, border .2s ease-in-out;
+        border: 2px solid #797267;
+      }
+      .navbar a {
+        color: #797267;
+      }
+      .btn-transparent:hover {
+        color: white;
+        background-color: rgba(255,255,255,0.2);
+      }
+      header .navbar {
+        margin-left: 22px;
+      }
+      .navbar-btn.btn-xs {
+        margin-top:5px;
+      }
+      .btn-primary.btn-file span, .btn-primary.btn-file i, span.glyphicon {
+        color: #fff;
+      }
+      .list-group-item {
+        padding: 0;
+        background-color: inherit;
+        border-top: 1px solid #000;
+        margin-top: 4px;
+      }
+
+      table.table-bordered {
+        width: 98%;
+      }
+      .table-bordered td, .table-bordered th {
+        padding: 5px;
+      }
+      .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+        border-top: #999 2px solid;
+      }
+      .item-id {min-width: 50px;}
+      .item-name {min-width: 100px; width: 130px;}
+      .item-response-list {min-width: 180px;}
+      .item-response-list textarea {width: 100%; height: 12em;}
+      textarea {border: 2px solid #ddd;}
+      .saved textarea {
+        border: 2px solid #3d3;
+      }
+      label.image {
+        width: 100px;
+      }
+      .modified textarea {
+        border: 2px solid #ea7;
+      }
+      textarea:focus {
+        outline: none;
+      }
+      button.btn {margin: 4px 2px;}
+      .file-input button.btn {margin: inherit;}
+      header h3 {
+        line-height: 1.8em;
+        margin-top: 1.3em;
+      }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-2.2.2.js" integrity="sha256-4/zUCqiq0kqxhZIyp4G0Gk+AOtCJsY1TA00k5ClsZYE=" crossorigin="anonymous"></script>
+    <!-- canvas-to-blob.min.js is only needed if you wish to resize images before upload.
+     This must be loaded before fileinput.min.js -->
+    <script src="//s.hobbitmaster.us/canvas-to-blob.min.js" type="text/javascript"></script>
+    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
+     This must be loaded before fileinput.min.js -->
+    <script src="//s.hobbitmaster.us/sortable.min.js" type="text/javascript"></script>
+    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for HTML files.
+     This must be loaded before fileinput.min.js -->
+    <script src="//s.hobbitmaster.us/purify.min.js" type="text/javascript"></script>
+    <!-- the main fileinput plugin file -->
+    <script src="//s.hobbitmaster.us/fileinput.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js" integrity="sha256-XDU6Po3hKjdQXJHRrKrWlIF/E6y6BBgV5eiqZSYePpo=" crossorigin="anonymous"></script>
+
+    <script>
+      var botName = 'BETA';
+      var maxResponseID = 0;
+      var dataSet = [];
+      function loadItems(cb) {
+        cb = cb || function (){};
+        var responses = jQuery.ajax({
+          method: 'GET',
+          url: '/api/response/' + botName,
+          dataType: 'json'
+        });
+        responses.done(function (result) {
+          dataSet = result;
+          var container = $('#data-container');
+          generateItems(container, result);
+          cb();
+        });
+        responses.fail(function (error) {
+          $('#data-container').text("ERROR", JSON.stringify(error));
+          cb();
+        });
+      }
+
+      function saveItem(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/response/' + botName + '/' + item.id,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          $('response-list-' + item.id).addClass('saved');
+          $('response-list-' + item.id).removeClass('modified');
+          console.log('saved', item, result);
+          cb();
+        });
+        save.fail(function (error) {
+          console.error('error saving', error);
+          cb();
+        });
+      }
+
+      function deleteItem(id, cb) {
+        cb = cb || function (){};
+        var del = jQuery.ajax({
+          method: 'DELETE',
+          url: '/api/response/' + botName + '/' + id
+        });
+        del.done(function (result) {
+          console.log('deleted', result);
+          cb();
+        });
+        del.fail(function (error) {
+          console.error('error deleting', error);
+          cb();
+        });
+      }
+
+      function addItem(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/response/' + botName + '/' + item.id,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          console.log('added', result);
+          cb(null, result);
+        });
+        save.fail(function (error) {
+          console.error('error adding', error);
+          cb(error);
+        });
+      }
+
+      function addResponse(cb) {
+        addItem({id: maxResponseID + 1, name: 'ANewResponse', response:[{type:'text',text:'new text'}], match: 'exact'}, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function deleteResponse(id, cb) {
+        deleteItem(id, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function addMessageToResponse(id, cb) {
+        var response = [];
+        response = getMessages(id);
+        response.push({'type':'text','text':'New Text'});
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function addImageToResponse(id, cb) {
+        var response = [];
+        response = getMessages(id);
+        response.push({type:'image',
+          originalContentUrl: 'not set',
+          previewImageUrl: 'not set'
+        });
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function getMessages(id, cb) {
+        var response = [];
+        $('#response-list-' + id + ' .message, #response-list-' + id + ' div.image').each(function (index) {
+          if ($(this).is('textarea')) {
+            response.push({type:'text', text:this.value});
+          } else if ($(this).is('div')) {
+            var imageInfo = $(this).find('input.image-input');
+            if (imageInfo.length === 2) {
+              response.push({type:'image',
+                originalContentUrl: imageInfo[0].value,
+                previewImageUrl: imageInfo[1].value
+              });
+            }
+          }
+        });
+
+        return response;
+      }
+
+      var specialRooms = [
+        {
+          name: 'Hobbot Helpers',
+          groupId: 'C45748f4343bb338de1644609f7b12d20'
+        }
+      ];
+
+      function generateItems(target, items) {
+        items.forEach(function (item, index) {
+          item.index = index;
+          if (item.id > maxResponseID) {
+            maxResponseID = parseInt(item.id, 10);
+          }
+          item.response.forEach(function (m, index) {
+            m.index = index;
+            if (m.type && m.type === 'text') {
+              m.isText = true;
+            }
+            if (m.type && m.type === 'image') {
+              m.isImage = true;
+            }
+          });
+          item.fuzzy = item.match === 'fuzzy';
+          item.exact = item.match !== 'fuzzy';
+          item.roomOnlyButtons = [];
+          item.roomNeverButtons = [];
+
+          specialRooms.forEach(function (room) {
+            var roomOnlyBtn = {
+              name: room.name,
+              groupId: room.groupId
+            }
+            var roomNeverBtn = {
+              name: room.name,
+              groupId: room.groupId
+            }
+            if (item.roomsOnly) {
+              item.roomsOnly.forEach(function (roomOnly) {
+                if (room.groupId === roomOnly) {
+                  roomOnlyBtn.active = true;
+                }
+              });
+            }
+            if (item.roomsNever) {
+              item.roomsNever.forEach(function (roomNever) {
+                if (room.groupId === roomNever) {
+                  roomNeverBtn.active = true;
+                }
+              });
+            }
+            item.roomOnlyButtons.push(roomOnlyBtn);
+            item.roomNeverButtons.push(roomNeverBtn);
+          });
+        });
+        target.empty();
+        var t = templateFromCdata($('#item-template')[0]);
+        target.append(Mustache.render(t, {items: items, botName: botName}));
+        $('input.file').fileinput();
+        $('input.file').on('filebatchuploadcomplete', function(event, files, extra) {
+          console.log('File uploaded finished', files, extra);
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+
+
+      }
+      function templateFromCdata(el) {
+        var cdataRegex = /^<!\[CDATA\[((.|\r?\n)*)\]\]>$/;
+        var t = el.innerHTML.trim();
+        var m = cdataRegex.exec(t);
+        return m ? m[1] : t;
+      }
+
+      function updateResponse(id) {
+        var response = [];
+        var roomsOnly = [];
+        var roomsNever = [];
+        $('#response-list-' + id + ' .response').each(function (index) {
+          var textarea = $(this).find('.response-type.text textarea')[0];
+          if (textarea) {
+            response.push({type:'text', text:textarea.value});
+          }
+          var imageInfo = $(this).find('.response-type.image input');
+          if (imageInfo.length === 2) {
+            response.push({type:'image',
+              originalContentUrl: imageInfo[0].value,
+              previewImageUrl: imageInfo[1].value
+            });
+          }
+        });
+        $('#response-list-' + id + ' .room-only').each(function (index) {
+          var roButton = $(this);
+          if (roButton.hasClass('active')) {
+            roomsOnly.push(roButton.data('roomId'));
+          }
+        });
+        $('#response-list-' + id + ' .room-never').each(function (index) {
+          var roButton = $(this);
+          if (roButton.hasClass('active')) {
+            roomsNever.push(roButton.data('roomId'));
+          }
+        });
+        var nameField = $('#name-' + id)[0];
+        var exactBtn = $('#exact-' + id)[0];
+        var exact = $(exactBtn).parent().hasClass('active');
+        var fuzzyBtn = $('#fuzzy-' + id)[0];
+        var fuzzy = $(fuzzyBtn).parent().hasClass('active');
+
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        item.roomsOnly = roomsOnly;
+        item.roomsNever = roomsNever;
+        item.match = fuzzy ? 'fuzzy' : 'exact';
+
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers(item.id);
+          });
+        });
+      }
+      function deleteMessage(id, messageIndex) {
+        var response = [];
+        var existingResponse = getMessages(id);
+        existingResponse.forEach(function (item, index) {
+          if (index === messageIndex) return;
+          response.push(existingResponse[index]);
+        });
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers(item.id);
+          });
+        });
+      }
+      function addUpdateHandlers(savedItem) {
+        $('#add-response').click(function (ev) {
+          addResponse();
+        });
+        $('.add-message').click(function (ev) {
+          addMessageToResponse($(this).data('id'));
+        });
+        $('.add-image').click(function (ev) {
+          addImageToResponse($(this).data('id'));
+        });
+        $('.delete-response').click(function (ev) {
+          deleteResponse($(this).data('id'));
+        });
+        $('.delete-message').click(function (ev) {
+          deleteMessage($(this).data('id'), $(this).data('message-index'));
+        });
+        $('.update-response').click(function (ev) {
+          updateResponse($(this).data('id'));
+        });
+        $('.message').keyup(function (ev) {
+          $(this).parent().addClass('modified');
+          $(this).parent().removeClass('saved');
+        }).focus(function (ev) {
+          $(this).parent().removeClass('saved');
+        });
+        if (savedItem) {
+          $('#response-list-' + savedItem).addClass('saved');
+        }
+      }
+
+      // Page INIT
+      loadItems(function () {
+        addUpdateHandlers();
+      });
+    </script>
+  </head>
+  <body>
+    <section class="menu-wrapper">
+      <header class="menu">
+      <nav style="height: 40px;" class="navbar navbar-fixed-top nav-xs">
+      </nav>
+      <h3>Hobbot Beta Admin</h3>
+      </header>
+    </section>
+    <div class="container-fluid">
+      <section>
+        <ul class="nav nav-pills">
+        </ul>
+        <div id="data-container">
+        </div>
+      </section>
+    </div>
+    <script type="text/template" id="item-template">
+      <button class="add-response btn btn-primary" id="add-response"><span class="glyphicon glyphicon-plus"></span> Add Response</button>
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Name</th><th>Messages</th></tr>
+          </thead>
+          {{#items}}
+          <tr>
+            <td class="item-id hidden" id="id-{{id}}">{{id}}</td>
+            <td class="item-name">
+              <input type="text" id="name-{{id}}" value="{{name}}"/><br/>
+              <div class="btn-group btn-group-xs" data-toggle="buttons">
+                <label class="btn btn-default btn-xs exact {{#exact}}active{{/exact}}"><input class="match-type" type="radio" id="exact-{{id}}" value="exact" {{#exact}}checked="checked"{{/exact}} autocomplete="off"/>Exact</label>
+                <label class="btn btn-default btn-xs fuzzy {{#fuzzy}}active{{/fuzzy}}"><input class="match-type" type="radio" id="fuzzy-{{id}}" value="fuzzy" {{#fuzzy}}checked="checked"{{/fuzzy}} autocomplete="off"/>Fuzzy</label>
+              </div><br/>
+              <button class="update-response btn btn-sm btn-success" data-id="{{id}}" id="update-{{id}}" type="submit">&nbsp;&nbsp;Update&nbsp;&nbsp;</button><br/>
+              <button class="add-message btn btn-sm btn-primary" data-id="{{id}}" id="add-message-{{id}}" type="submit">Add Message</button><br/>
+              <button class="add-image btn btn-sm btn-primary" data-id="{{id}}" id="add-image-{{id}}" type="submit">Add Image</button><br/>
+              <button class="delete-response btn btn-sm btn-danger" data-id="{{id}}" id="delete-response-{{id}}" type="submit">Delete Response</button><br/>
+            </td>
+            <td class="item-response-list" id="response-list-{{id}}">
+              {{#roomOnlyButtons}}
+              <button type="button" class="btn btn-default btn-xs room-only {{#active}}active{{/active}}" data-room-id="{{groupId}}" data-toggle="button" aria-pressed="false" autocomplete="off" id="rooms-only-{{id}}">{{name}} only</button>
+              {{/roomOnlyButtons}}
+              &nbsp;&nbsp;
+              {{#roomNeverButtons}}
+              <button type="button" class="btn btn-default btn-xs room-never {{#active}}active{{/active}}" data-room-id="{{groupId}}" data-toggle="button" aria-pressed="false" autocomplete="off" id="rooms-never-{{id}}">NOT {{name}}</button>
+              {{/roomNeverButtons}}<br/>
+              <ul class="list-group responses">
+              {{#response}}
+                <li class="list-group-item response">
+                {{#isText}}
+                <div class="response-type text">
+                  <textarea class="message" id="message-{{id}}-{{index}}" data-response-id="{{id}}" data-message-index="{{index}}">{{text}}</textarea><br/>
+                <div>
+                <button class="delete-message btn btn-danger btn-xs" data-id="{{id}}" data-message-index="{{index}}" id="delete-message-{{id}}" type="submit">Delete Message</button><br/>
+                {{/isText}}
+                {{#isImage}}
+                  <div class="response-type image">
+                    <label class="image image-full" for="image-full-{{id}}-{{index}}">Full</label><input class="image-input" type="text" disabled="disabled" id="image-full-{{id}}-{{index}}" value="{{originalContentUrl}}" size="99"/></br>
+                    <label class="image image-preview" for="image-preview-{{id}}-{{index}}">Preview</label><input class="image-input" type="text" disabled="disabled" id="image-preview-{{id}}-{{index}}" value="{{previewImageUrl}}" size="99"/><br/>
+                    <label class="control-label">Select Image</label><input id="input-{{id}}-{{index}}" type="file" class="file" data-upload-url="/api/response/{{botName}}/{{id}}/{{index}}/image" data-show-preview="false" data-show-uploaded-thumbs="true" data-upload-async="true" data-max-file-count="1">
+                  </div>
+                <button class="delete-message btn btn-danger btn-xs" data-id="{{id}}" data-message-index="{{index}}" id="delete-message-{{id}}" type="submit">Delete Image</button><br/>
+                {{/isImage}}
+                </li>
+              {{/response}}
+              </ul>
+            </td>
+          </tr>
+          {{/items}}
+        </table>
+    </script>
+  </body>
+</html>

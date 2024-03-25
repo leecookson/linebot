@@ -1,0 +1,224 @@
+<html>
+  <head>
+    <title>Hobbot Beta Push Alerts</title>
+
+    <link rel="icon" href="//s.hobbitmaster.us/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin= "anonymous">
+    <link href="//s.hobbitmaster.us/g.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=.6">
+
+    <style>
+      body {
+      }
+      .template {display: none;}
+      .hidden {display: none;}
+      .btn-transparent {
+        background: transparent;
+        color: #F2F2F2;
+        -webkit-transition: background .2s ease-in-out, border .2s ease-in-out;
+        -moz-transition: background .2s ease-in-out, border .2s ease-in-out;
+        -o-transition: background .2s ease-in-out, border .2s ease-in-out;
+        transition: background .2s ease-in-out, border .2s ease-in-out;
+        border: 2px solid #797267;
+      }
+      .navbar a {
+        color: #797267;
+      }
+      .btn-transparent:hover {
+        color: white;
+        background-color: rgba(255,255,255,0.2);
+      }
+      header .navbar {
+        margin-left: 22px;
+      }
+      .navbar-btn.btn-xs {
+        margin-top:5px;
+      }
+      table.table-bordered {
+        width: 98%;
+      }
+      .table-bordered td, .table-bordered th {
+        padding: 5px;
+      }
+      span.chat-ids {
+        font-size: 11px;
+      }
+      textarea {width: 100%; height: 12em;}
+      textarea {border: 2px solid #ddd;}
+      textarea.modified {
+        border: 2px solid #d33;
+      }
+      textarea.saved {
+        border: 2px solid #3d3;
+      }
+      section#status.success {
+        color: #090;
+      }
+      section#status.fail {
+        color: #900;
+      }
+      .btn-group {margin: 4px 2px;}
+      header h3 {
+        line-height: 1.8em;
+        margin-top: 1.3em;
+      }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-2.2.2.js" integrity="sha256-4/zUCqiq0kqxhZIyp4G0Gk+AOtCJsY1TA00k5ClsZYE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js" integrity="sha256-XDU6Po3hKjdQXJHRrKrWlIF/E6y6BBgV5eiqZSYePpo=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script>
+      var botName = 'BETA';
+
+      function push(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'POST',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/push/' + botName,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          $('response-' + item.id).addClass('saved');
+          $('response-' + item.id).removeClass('modified');
+          console.log('saved', result);
+          setStatus('Message sent');
+          cb();
+        });
+        save.fail(function (error) {
+          console.error('error saving', error);
+          setStatus('Error sending', true);
+          cb();
+        });
+      }
+
+      function pushMultiple(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'POST',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/push/' + item.recipientId + '/' + botName,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          $('response-' + item.id).addClass('saved');
+          $('response-' + item.id).removeClass('modified');
+          console.log('saved', result);
+          setStatus('Message sent');
+          cb();
+        });
+        save.fail(function (error) {
+          console.error('error saving', error);
+          setStatus('Error sending', true);
+          cb();
+        });
+      }
+
+      function sendMessage () {
+        console.log('sendMessage');
+        var recipientId, message;
+        var recipientField = $('#recipientId')[0];
+
+        var single = $('.single.active').length;
+        var users = $('.users.active').length;
+        var groups = $('.groups.active').length;
+        var all = $('.all.active').length;
+        if (single) {
+          recipientId = $('#recipientId')[0].value;
+        } else {
+          recipientId = users ? 'users' :
+            groups ? 'groups' :
+            all ? 'all' : 'single'
+        }
+        message = $('#message')[0].value;
+        var item = {
+          recipientId: recipientId,
+          message: message
+        }
+        if (single) {
+          push(item);
+        } else {
+          pushMultiple(item);
+        }
+      }
+
+      function setStatus(status, fail) {
+        var statusBox = $('#status');
+        statusBox.text(status);
+        statusBox.addClass(fail ? 'fail' : 'success');
+        setTimeout(() => {
+          statusBox.text('');
+          statusBox.removeClass(fail ? 'fail' : 'success');
+        }, 5000);
+      }
+
+      function chooseRecipientType() {
+        var recipientField = $('#recipientId')[0];
+        var single = $('.single.active').length;
+        if (single) {
+          recipientField.disabled = false;
+        } else {
+          recipientField.disabled = true;
+          recipientField.value = '';
+        }
+      }
+
+      function chooseRecipient() {
+        var recipientId = $('#recipientId')[0];
+        recipientId.value = $(this)[0].dataset['chatId'];
+        $('.single').prop('checked', true).addClass('active');
+        $('.not-single').prop('checked', false).removeClass('active');
+      }
+
+      function addUpdateHandlers() {
+        console.log('addUpdateHandlers');
+        $('#send-message').click(sendMessage);
+        $('.chat-ids').click(chooseRecipient);
+        $('.recipient-type').change(chooseRecipientType);
+      }
+
+      $(document).ready(function () {
+        addUpdateHandlers();
+      });
+    </script>
+  </head>
+  <body>
+    <section class="menu-wrapper">
+      <header class="menu">
+        <nav style="height: 40px;" class="navbar navbar-fixed-top nav-xs">
+          <button type="button" class="btn btn-default navbar-btn btn-xs btn-transparent"><a href="responses">Responses</a></button>
+          <button type="button" class="btn btn-default navbar-btn btn-xs btn-transparent"><a href="push">Push Alerts</a></button>
+        </nav>
+        <h3>Hobbot Beta Push Alerts</h3>
+      </header>
+    </section>
+    <div class="container-fluid">
+      <section>
+        <ul class="nav nav-pills">
+        </ul>
+        <div id="data-container">
+            <label for="recpientId">Recipient:</label>
+            <input type="text" id="recipientId" size="48" value=""/><br/>
+              <div class="btn-group" role="group" data-toggle="buttons">
+              </div>
+              <div class="btn-group" role="group" data-toggle="buttons">
+                <button type="button" class="btn btn-default btn-xs chat-ids" data-chat-id="U03077b2163a5ea80a46b0f158a2ae9a6">Hawkeye</button>
+              </div>
+            <textarea class="message" id="message"></textarea><br/>
+            <section id="status"></section>
+            <div class="btn-group btn-group-sm" data-toggle="buttons">
+              <label class="btn btn-default btn-xs single active"><input class="recipient-type" type="radio" id="single" value="single" checked="checked" autocomplete="off"/>Single</label>
+              <label class="btn btn-default btn-xs not-single groups"><input class="recipient-type" type="radio" id="groups" value="groups" autocomplete="off"/>Groups</label>
+              <label class="btn btn-default btn-xs not-single users"><input class="recipient-type" type="radio" id="users" value="groups" autocomplete="off"/>Users</label>
+              <label class="btn btn-default btn-xs not-single all"><input class="recipient-type" type="radio" id="groups" value="groups" autocomplete="off"/>All</label>
+            </div>
+            <button class="send-message btn btn-sm btn-success" id="send-message" type="submit">&nbsp;&nbsp;Send&nbsp;&nbsp;</button>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

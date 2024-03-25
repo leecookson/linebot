@@ -1,0 +1,14 @@
+[Unit]
+Description=LINEBot
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ec2-user/linebot
+Type=simple
+User=linebot
+ExecStart=/usr/bin/node /home/ec2-user/linebot/linebot.js
+Restart=on-failure
+PIDFile=/tmp/linebot_pid
+
+[Install]
+WantedBy=default.target

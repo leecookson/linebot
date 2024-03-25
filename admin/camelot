@@ -1,0 +1,362 @@
+<html>
+  <head>
+    <title>Camelot Caretaker Admin</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin= "anonymous">
+    <link href="//s.hobbitmaster.us/g.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=.6">
+
+    <style>
+      body {
+      }
+      .template {display: none;}
+      .hidden {display: none;}
+      header.menu {
+        background-image: url(https://s.hobbitmaster.us/KOC-image.jpg);
+        background-position-y: -60px;
+      }
+      table.table-bordered {
+        width: 98%;
+      }
+      .table-bordered td, .table-bordered th {
+        padding: 5px;
+      }
+      .item-id {min-width: 50px;}
+      .item-name {min-width: 100px;width: 130px;}
+      .item-response {min-width: 180px;}
+      .item-response textarea {width: 100%; height: 12em;}
+      textarea {border: 2px solid #ddd;}
+      textarea.modified {
+        border: 2px solid #d33;
+      }
+      textarea.saved {
+        border: 2px solid #3d3;
+      }
+      button {
+        margin-bottom: 2px;
+      }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-2.2.2.js" integrity="sha256-4/zUCqiq0kqxhZIyp4G0Gk+AOtCJsY1TA00k5ClsZYE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js" integrity="sha256-XDU6Po3hKjdQXJHRrKrWlIF/E6y6BBgV5eiqZSYePpo=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script>
+      var botName = 'CAMELOT';
+      var maxRuleID = 0;
+      var dataSet = [];
+      function loadItems(cb) {
+        cb = cb || function (){};
+        var rules = jQuery.ajax({
+          method: 'GET',
+          url: '/api/rules/' + botName,
+          dataType: 'json'
+        });
+        rules.done(function (result) {
+          dataSet = result;
+          var container = $('#data-container');
+          generateItems(container, result);
+          cb();
+        });
+        rules.fail(function (error) {
+          $('#data-container').text("ERROR", JSON.stringify(error));
+          cb();
+        });
+      }
+
+      function saveItem(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/rules/' + botName + '/' + item.id,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          $('response-' + item.id).addClass('saved');
+          $('response-' + item.id).removeClass('modified');
+          console.log('saved', result);
+          cb();
+        });
+        save.fail(function (error) {
+          console.error('error saving', error);
+          cb();
+        });
+      }
+
+      function deleteItem(id, cb) {
+        cb = cb || function (){};
+        var del = jQuery.ajax({
+          method: 'DELETE',
+          url: '/api/rules/' + botName + '/' + id
+        });
+        del.done(function (result) {
+          console.log('deleted', result);
+          cb();
+        });
+        del.fail(function (error) {
+          console.error('error deleting', error);
+          cb();
+        });
+      }
+
+      function addItem(item, cb) {
+        cb = cb || function (){};
+        var save = jQuery.ajax({
+          method: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          url: '/api/rules/' + botName + '/' + item.id,
+          dataType: 'json',
+          data: JSON.stringify(item)
+        });
+        save.done(function (result) {
+          console.log('added', result);
+          cb(null, result);
+        });
+        save.fail(function (error) {
+          console.error('error adding', error);
+          cb(error);
+        });
+      }
+
+      function addRule(cb) {
+        addItem({
+          id: maxRuleID + 1,
+          name: 'newRule',
+          rules: {
+            OR: [
+             {exactMatch: 'newRule'}
+            ]
+          },
+          response:[{type:'text',text:'new text'}]
+        }, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function deleteRule(id, cb) {
+        deleteItem(id, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function addMatch(id, cb) {
+        var response = [];
+        var rules = [];
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          rules: rules,
+          response: response
+        };
+        $('#response-' + id + ' .message').each(function (index) {
+          response.push({type:'text', text:this.value});
+        });
+        $('#response-' + id + ' .message').each(function (index) {
+          response.push({type:'text', text:this.value});
+        });
+
+      }
+      function addMessageToRule(id, cb) {
+        var response = [];
+        var rules = [];
+        $('#rules-' + id + ' .message').each(function (index) {
+          rules.push({type:'text', text:this.value});
+        });
+        $('#response-' + id + ' .message').each(function (index) {
+          response.push({type:'text', text:this.value});
+        });
+        response.push({'type':'text','text':'New Text'});
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          rules: rules,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers();
+          });
+        });
+      }
+
+      function generateItems(target, items) {
+        items.forEach(function (item, index) {
+          item.index = index;
+          if (item.id > maxRuleID) {
+            RuleID = parseInt(item.id, 10);
+          }
+          item.response.forEach(function (m, index) {
+            m.index = index;
+          });
+        });
+        target.empty();
+        var t = templateFromCdata($('#item-template')[0]);
+        target.append(Mustache.render(t, {items: items}));
+      }
+
+      function updateRule(id) {
+        var sampleItem =   {
+          "name": "CHS Calculator",
+          "disabled": true,
+          "rules": {
+            "OR": [
+              {"exactMatch": "calc"},
+              {"keywords": ["have", "calc"]},
+              {"keywords": ["calc", "login"]},
+              {"keywords": ["chs", "login"]},
+              {"keywords": ["chs", "calc"]}
+            ]
+          },
+          "response": [
+            {
+              "expires": "2017-01-24T23:59",
+              "type": "text",
+              "text": "URL: http://kom-chs.mhweb.in/\nEmail: chrishallam75@aol.com\nPassword: fkp0nm\nExpires: January 24,2017"
+            }
+          ]
+        };
+        var matchRules = [];
+        var response = [];
+        var rule = {name: "rule " + id, disabled: false, rules: {OR:matchRules}, eesponse: response};
+
+        $('#response-' + id + ' .message').each(function (index) {
+          response.push({type:'text', text:this.value});
+        });
+
+        var nameField = $('#name-' + id)[0];
+        matchRules.push({exactMatch: nameField.value});
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers(item.id);
+          });
+        });
+      }
+
+      function deleteResponse(id, responseIndex) {
+        var response = [];
+        $('#response-' + id + ' .message').each(function (index) {
+          if (index === responseIndex) return;
+          response.push({type:'text', text:this.value});
+        });
+        var nameField = $('#name-' + id)[0];
+        var item = {
+          id: id,
+          name: nameField.value,
+          response: response
+        }
+        saveItem(item, function (err) {
+          loadItems(function () {
+            addUpdateHandlers(item.id);
+          });
+        });
+      }
+      function addUpdateHandlers(savedItem) {
+        $('#add-rule').click(function (ev) {
+          addRule();
+        });
+        $('.add-message').click(function (ev) {
+          addMessageToRule($(this).data('id'));
+        });
+        $('.delete-rule').click(function (ev) {
+          deleteRule($(this).data('id'));
+        });
+        $('.delete-message').click(function (ev) {
+          deleteMessage($(this).data('id'), $(this).data('message-index'));
+        });
+        $('.add-match').click(function (ev) {
+          addMatch($(this).data('id'), $(this).data('message-index'));
+        });
+        $('.update-rule').click(function (ev) {
+          updateRule($(this).data('id'));
+        });
+        $('.response').keyup(function (ev) {
+          $(this).addClass('modified');
+          $(this).removeClass('saved');
+        }).focus(function (ev) {
+          $(this).removeClass('saved');
+        });
+        if (savedItem) {
+          $('#response-' + savedItem).addClass('saved');
+        }
+      }
+      function templateFromCdata(el) {
+        var cdataRegex = /^<!\[CDATA\[((.|\r?\n)*)\]\]>$/;
+        var t = el.innerHTML.trim();
+        var m = cdataRegex.exec(t);
+        return m ? m[1] : t;
+      }
+
+      // Page INIT
+      loadItems(function () {
+        addUpdateHandlers();
+      });
+    </script>
+  </head>
+  <body>
+    <section class="menu-wrapper">
+      <header class="menu">
+        <nav style="height: 30px;">
+          <ul class="nav nav-pills">
+          </ul>
+        </nav>
+        <h3>Camelot Caretaker Admin</h3>
+      </header>
+    </section>
+    <div class="container-fluid">
+      <section>
+        <ul class="nav nav-pills">
+        </ul>
+        <div id="data-container">
+        </div>
+      </section>
+    </div>
+    <script type="text/template" id="item-template">
+      <button class="add-rule btn btn-primary" id="add-rule"><span class="glyphicon glyphicon-plus"></span> Add Rule</button>
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Name</th><th>Matches</th><th>Messages</th></tr>
+          </thead>
+          {{#items}}
+          <tr>
+            <td class="item-id hidden" id="id-{{id}}">{{id}}</td>
+            <td class="item-name">
+              <input type="text" id="name-{{id}}" value="{{name}}"/><br/>
+              <button class="update-rule btn btn-sm btn-success" data-id="{{id}}" id="update-rule{{id}}" type="submit">Update</button>
+              <button class="delete-rule btn btn-sm btn-danger" data-id="{{id}}" id="delete-rule-{{id}}" type="submit">Delete Rule</button>
+              <button class="add-message btn btn-sm btn-primary" data-id="{{id}}" id="add-message-{{id}}" type="submit">Add Message</button>
+            </td>
+            <td class="item-rules">
+              {{#rules}}
+                {{#OR}}
+                  <input type="text" id="rule-{{id}}" data-match-type="{{#keywords}}keywords{{/keywords}}{{#exactMatch}}exactMatch{{/exactMatch}}" value="{{keywords}}{{exactMatch}}"/><br/>
+                  <button class="delete-match btn btn-xs btn-danger" data-id="{{id}}" id="delete-match-{{id}}" type="submit">Delete Match</button><br/>
+                {{/OR}}
+              {{/rules}}
+              <button class="add-match btn btn-xs btn-success" data-id="{{id}}" id="add-match-{{id}}" type="submit">Add Match</button><br/>
+            </td>
+            <td class="item-response" id="response-{{id}}">
+              {{#response}}
+                <div>
+                  <textarea class="message" id="message-{{id}}-{{index}}" data-response-id="{{id}}" data-message-index="{{index}}">{{text}}</textarea><br/>
+                  <button class="delete-message btn btn-danger btn-xs" data-id="{{id}}" data-message-index="{{index}}" id="delete-message-{{id}}" type="submit">Delete Message</button>&nbsp;&nbsp;&nbsp;
+                  <div class="btn-group btn-group-xs" data-toggle="buttons">
+                    <label class="btn btn-default btn-xs exact-match {{#exactMatch}}active{{/exactMatch}}"><input type="radio" data-id="{{id}}" data-exact-match-index="{{index}}" id="match-exact-{{id}}" autocomplete="off"/>Exact Match</label>
+                    <label class="btn btn-default btn-xs fuzzy-match {{#keywords}}active{{/keywords}}"><input type="radio" data-id="{{id}}" data-fuzzy-match-index="{{index}}" id="match-fuzzy-{{id}}" autocomplete="off"/>Fuzzy</label>
+                  </div>
+                </div>
+              {{/response}}
+            </td>
+          </tr>
+          {{/items}}
+        </table>
+    </script>
+  </body>
+</html>
